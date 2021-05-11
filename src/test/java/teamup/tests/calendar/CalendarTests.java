@@ -1,6 +1,7 @@
 package teamup.tests.calendar;
 
 import com.codeborne.selenide.CollectionCondition;
+import com.codeborne.selenide.Condition;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.params.ParameterizedTest;
@@ -13,8 +14,8 @@ import teamup.pages.*;
 import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
-import static com.codeborne.selenide.Selenide.$;
-import static com.codeborne.selenide.Selenide.$$;
+
+import static com.codeborne.selenide.Selenide.*;
 import static org.junit.jupiter.api.Assertions.assertEquals;
 
 public class CalendarTests extends TestBase {
@@ -175,5 +176,6 @@ public class CalendarTests extends TestBase {
 
     private void deleteCalendar() {
         calendarPage.editCalendarSettings().deleteCalendar().goToLoginPage();
+        $x("//div/h1").should(Condition.appear).shouldHave(Condition.text("Dashboard"));
     }
 }

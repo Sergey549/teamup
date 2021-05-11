@@ -146,7 +146,6 @@ public class TestBase {
             Calendar calendar = new Calendar(name);
             list.add(calendar);
         }
-        logger.info(list.size());
         return list;
     }
 }
