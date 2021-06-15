@@ -23,6 +23,7 @@ public class CalendarTests extends TestBase {
 
     public DashbordPage dashbordPage = new DashbordPage();
     public CalendarPage calendarPage= new CalendarPage();
+    public CalendarSettingsPage calendarSettingsPage = new CalendarSettingsPage();
 
 
     @BeforeEach
@@ -59,7 +60,7 @@ public class CalendarTests extends TestBase {
         openTimeGrid();
         int eventsBeforeCreation = calendarPage.getEventCount();
         logger.info("Events before creation: " + eventsBeforeCreation);
-        createEvent();
+       createEvent();
         int eventsAfterCreation = calendarPage.getEventCount();
         logger.info("Events after creation: " + eventsAfterCreation);
         logger.info("Result: there was one event created: " + eventsAfterCreation);
@@ -72,15 +73,16 @@ public class CalendarTests extends TestBase {
     void changeEventsName(String name){
         openCalendar(0);
         openTimeGrid();
+        getOrCreateEvent();
         int eventsBeforeEventTitleChanging = calendarPage.getEventCount();
         logger.info("Events before changing: " + eventsBeforeEventTitleChanging);
+        logger.info("Event name before changing: " + $(locators.eventTitle).getText());
         changeEventName(name);
         int eventsAfterEventTitleChanging = calendarPage.getEventCount();
         logger.info("Events after changing: " + eventsAfterEventTitleChanging);
         assertEquals(eventsAfterEventTitleChanging, eventsBeforeEventTitleChanging,
                 "Events quantity after name changing is not equals quantity before name changing");
-        logger.info("Event name before changing: " + $(locators.eventTitle).getText());
-        logger.info("Event name before changing: " + name);
+        logger.info("Event name after changing: " + name);
         assert $(locators.eventTitle).getText().equals(name);
     }
 
@@ -88,6 +90,7 @@ public class CalendarTests extends TestBase {
     void undoDeleteEvent() {
         openCalendar(0);
         openTimeGrid();
+        getOrCreateEvent();
         int eventsBeforeRemove = calendarPage.getEventCount();
         logger.info("Events before remove: " + eventsBeforeRemove);
         deleteEvent(0);
@@ -103,6 +106,7 @@ public class CalendarTests extends TestBase {
     void deleteEvents(){
         openCalendar(0);
         openTimeGrid();
+        getOrCreateEvent();
         int eventsBeforeRemove = calendarPage.getEventCount();
         logger.info("Events before remove: " + eventsBeforeRemove);
         deleteEvent(0);
@@ -133,7 +137,10 @@ public class CalendarTests extends TestBase {
     }
 
     private void createEvent() {
-        calendarPage.createEvent();
+        calendarPage
+                .chooseTimeGrid()
+                .chooseCalendarForEvent()
+                .saveEvent();
         $$(locators.existingEvents)
                 .shouldHave(CollectionCondition.size($$(locators.existingEvents).size()+1),
                         Duration.ofSeconds(10));
@@ -148,7 +155,6 @@ public class CalendarTests extends TestBase {
 
     private void openTimeGrid() {
         calendarPage.pickDate();
-        getOrCreateEvent();
     }
 
     private void cancelEventDeletion() {
@@ -166,7 +172,10 @@ public class CalendarTests extends TestBase {
     }
 
     private void changeTimeZone() {
-        calendarPage.editCalendarSettings().changeTimeZone();
+        calendarPage.editCalendarSettings();
+        calendarSettingsPage.goToDataAndTime();
+        calendarSettingsPage.changeTimeZone();
+
     }
 
     private void openCalendar(int index) {

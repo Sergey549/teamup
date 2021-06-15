@@ -34,7 +34,6 @@ public class CalendarSettingsPage extends TestBase {
     }
 
     public CalendarSettingsPage changeTimeZone() {
-        goToDataAndTime();
         currentTimeZone = getCurrentTimeZone();
         updatedTimeZone = "";
         logger.info("Current Time Zone is " + currentTimeZone);

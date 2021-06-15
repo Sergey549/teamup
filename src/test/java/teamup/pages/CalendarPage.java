@@ -76,12 +76,6 @@ public class CalendarPage extends TestBase {
         return new CalendarSettingsPage();
     }
 
-    public void createEvent() {
-        chooseTimeGrid();
-        chooseCalendarForEvent();
-        saveEvent();
-    }
-
     public void changeName(String name) {
         rename(name);
         saveEvent();
