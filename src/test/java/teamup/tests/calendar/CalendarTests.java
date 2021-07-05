@@ -9,8 +9,10 @@ import org.junit.jupiter.params.provider.ValueSource;
 import teamup.helpers.Cook;
 import teamup.helpers.base.TestBase;
 import teamup.helpers.obj.Calendar;
-import teamup.helpers.obj.Users;
-import teamup.pages.*;
+import teamup.pages.CalendarPage;
+import teamup.pages.CalendarSettingsPage;
+import teamup.pages.DashbordPage;
+
 import java.io.IOException;
 import java.time.Duration;
 import java.util.List;
@@ -22,14 +24,13 @@ public class CalendarTests extends TestBase {
 
 
     public DashbordPage dashbordPage = new DashbordPage();
-    public CalendarPage calendarPage= new CalendarPage();
+    public CalendarPage calendarPage = new CalendarPage();
     public CalendarSettingsPage calendarSettingsPage = new CalendarSettingsPage();
 
 
     @BeforeEach
     public void preconditions() throws IOException {
-//        getSession();
-        logIn(user);
+        getSession();
     }
 
     private void getSession() throws IOException {
@@ -39,10 +40,10 @@ public class CalendarTests extends TestBase {
     }
 
     @Test
-    void createCalendarWithName(){
-        List<Calendar> calendarsBeforeCreation=getCalendarCount();
+    void createCalendarWithName() {
+        List<Calendar> calendarsBeforeCreation = getCalendarCount();
         dashbordPage.initCalendarCreation().createCalendar(calendar.getName()).openDashboard();
-        List<Calendar> calendarsAfterCreation=getCalendarCount();
+        List<Calendar> calendarsAfterCreation = getCalendarCount();
         assertEquals(calendarsAfterCreation.size(), calendarsBeforeCreation.size() + 1,
                 "Calendars list size after creation is not increased by 1 unit");
     }
@@ -55,12 +56,12 @@ public class CalendarTests extends TestBase {
     }
 
     @Test
-    void createEventWithNoName(){
+    void createEventWithNoName() {
         openCalendar(0);
         openTimeGrid();
         int eventsBeforeCreation = calendarPage.getEventCount();
         logger.info("Events before creation: " + eventsBeforeCreation);
-       createEvent();
+        createEvent();
         int eventsAfterCreation = calendarPage.getEventCount();
         logger.info("Events after creation: " + eventsAfterCreation);
         logger.info("Result: there was one event created: " + eventsAfterCreation);
@@ -69,8 +70,8 @@ public class CalendarTests extends TestBase {
     }
 
     @ParameterizedTest
-    @ValueSource(strings = { "1", "@", "Test Event" })
-    void changeEventsName(String name){
+    @ValueSource(strings = {"1", "@", "Test Event"})
+    void changeEventsName(String name) {
         openCalendar(0);
         openTimeGrid();
         getOrCreateEvent();
@@ -103,7 +104,7 @@ public class CalendarTests extends TestBase {
     }
 
     @Test
-    void deleteEvents(){
+    void deleteEvents() {
         openCalendar(0);
         openTimeGrid();
         getOrCreateEvent();
@@ -118,7 +119,7 @@ public class CalendarTests extends TestBase {
     }
 
     @Test
-    void deleteCalendars(){
+    void deleteCalendars() {
         openCalendar(0);
         List<Calendar> calendarsBeforeRemove = dashbordPage.getCalendarCount();
         logger.info("Calendar list before remove: " + calendarsBeforeRemove.size());
@@ -142,7 +143,7 @@ public class CalendarTests extends TestBase {
                 .chooseCalendarForEvent()
                 .saveEvent();
         $$(locators.existingEvents)
-                .shouldHave(CollectionCondition.size($$(locators.existingEvents).size()+1),
+                .shouldHave(CollectionCondition.size($$(locators.existingEvents).size() + 1),
                         Duration.ofSeconds(10));
     }
 
@@ -160,14 +161,14 @@ public class CalendarTests extends TestBase {
     private void cancelEventDeletion() {
         calendarPage.undoDeletition();
         $$(locators.existingEvents)
-                .shouldHave(CollectionCondition.size($$(locators.existingEvents).size()+1),
+                .shouldHave(CollectionCondition.size($$(locators.existingEvents).size() + 1),
                         Duration.ofSeconds(10));
     }
 
     private void deleteEvent(int index) {
         calendarPage.pickEvent(index).initDelete().confirmDelete();
         $$(locators.existingEvents)
-                .shouldHave(CollectionCondition.size($$(locators.existingEvents).size()-1),
+                .shouldHave(CollectionCondition.size($$(locators.existingEvents).size() - 1),
                         Duration.ofSeconds(10));
     }
 
